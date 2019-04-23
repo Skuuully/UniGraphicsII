@@ -481,15 +481,15 @@ void TerrainNode::InitialiseGrid()
 			bottomLeft.TextureCoordinate = XMFLOAT2(0.0f, 1.0f);
 			bottomLeft.BlendMapTexCoord = XMFLOAT2((1.0f / (float)_numberOfZPoints) * z0, (1.0f / (float)_numberOfXPoints) * x0);
 
-			bottomRight.Position = XMFLOAT3((float)(xPos * _gridWidth), (float)botRightYPos, (float)((zPos * _gridWidth) + 1 * _gridWidth));
+			bottomRight.Position = XMFLOAT3((float)(xPos * _gridWidth), (float)botRightYPos, (float)((zPos + 1) * _gridWidth));
 			bottomRight.TextureCoordinate = XMFLOAT2(1.0f, 1.0f);
 			bottomRight.BlendMapTexCoord = XMFLOAT2((1.0f / (float)_numberOfZPoints) * (z0 + 1), (1.0f / (float)_numberOfXPoints) * x0);
 
-			topLeft.Position = XMFLOAT3((float)((xPos * _gridWidth) + 1 * _gridWidth), (float)topLeftY, (float)(zPos * _gridWidth));
+			topLeft.Position = XMFLOAT3((float)((xPos + 1) * _gridWidth), (float)topLeftY, (float)(zPos * _gridWidth));
 			topLeft.TextureCoordinate = XMFLOAT2(0.0f, 0.0f);
 			topLeft.BlendMapTexCoord = XMFLOAT2((1.0f / (float)_numberOfZPoints) * z0, (1.0f / (float)_numberOfXPoints) * (x0 + 1));
 
-			topRight.Position = XMFLOAT3((float)((xPos * _gridWidth) + 1 * _gridWidth), (float)topRightY, (float)((zPos * _gridWidth) + 1 * _gridWidth));
+			topRight.Position = XMFLOAT3((float)((xPos + 1) * _gridWidth), (float)topRightY, (float)((zPos + 1) * _gridWidth));
 			topRight.TextureCoordinate = XMFLOAT2(1.0f , 0.0f);
 			topRight.BlendMapTexCoord = XMFLOAT2((1.0f / (float)_numberOfZPoints) * (z0 + 1), (1.0f / (float)_numberOfXPoints) * (x0 + 1));
 
@@ -521,75 +521,58 @@ void TerrainNode::InitialiseGrid()
 			if (!(xPos == 0 || (unsigned)xPos == _numberOfXPoints - 1 || zPos == 0 || (unsigned)zPos == _numberOfZPoints - 1))
 			{
 				int vertexIndex = ((xPos * _numberOfZPoints) + zPos) * 4;
-				Vertex currentBottomLeft = _vertices[vertexIndex];
-				Vertex currentBottomRight = _vertices[vertexIndex + 1];
-				Vertex currentTopLeft = _vertices[vertexIndex + 2];
-				Vertex currentTopRight = _vertices[vertexIndex + 3];
+				Vertex currentSet[16];
+				currentSet[0] = _vertices[vertexIndex]; // currentBottomLeft
+				currentSet[1] = _vertices[vertexIndex + 1]; // currentBottomRight
+				currentSet[2] = _vertices[vertexIndex + 2]; // currentTopLeft
+				currentSet[3] = _vertices[vertexIndex + 3]; // currentTopRight
+				currentSet[4] = _vertices[((((xPos + 1) * _numberOfZPoints) + zPos - 1) * 4) + 1]; // topLeftLeft
+				currentSet[5] = _vertices[((((xPos + 1) * _numberOfZPoints) + zPos) * 4)]; // topMidLeft
+				currentSet[6] = _vertices[((((xPos + 1) * _numberOfZPoints) + zPos) * 4) + 1]; // topMidRight
+				currentSet[7] = _vertices[((((xPos + 1) * _numberOfZPoints) + zPos + 1) * 4)]; // topRightRight
+				currentSet[8] = _vertices[(((xPos * _numberOfZPoints) + zPos + 1) * 4) + 2]; // midRightTop
+				currentSet[9] = _vertices[(((xPos * _numberOfZPoints) + zPos + 1) * 4)]; // midRightBottom
+				currentSet[10] = _vertices[((((xPos - 1) * _numberOfZPoints) + zPos + 1) * 4) + 2]; // bottomRightRight
+				currentSet[11] = _vertices[((((xPos - 1) * _numberOfZPoints) + zPos) * 4) + 3]; // bottomMidRight
+				currentSet[12] = _vertices[((((xPos - 1) * _numberOfZPoints) + zPos) * 4) + 2]; // bottomMidLeft
+				currentSet[13] = _vertices[((((xPos - 1) * _numberOfZPoints) + zPos - 1) * 4) + 3]; // bottomLeftLeft
+				currentSet[14] = _vertices[(((xPos * _numberOfZPoints) + zPos - 1) * 4) + 1]; // midLeftBottom
+				currentSet[15] = _vertices[(((xPos * _numberOfZPoints) + zPos - 1) * 4) + 3]; // midLeftTop
 
-				Vertex topLeftLeft = _vertices[((((xPos + 1) * _numberOfZPoints) + zPos - 1) * 4) + 1];
-				Vertex topMidLeft = _vertices[((((xPos + 1) * _numberOfZPoints) + zPos) * 4)];
-				Vertex topMidRight = _vertices[((((xPos + 1) * _numberOfZPoints) + zPos) * 4) + 1];
-				Vertex topRightRight = _vertices[((((xPos + 1) * _numberOfZPoints) + zPos + 1) * 4)];
-				Vertex midRightTop = _vertices[(((xPos * _numberOfZPoints) + zPos + 1) * 4) + 2];
-				Vertex midRightBottom = _vertices[(((xPos * _numberOfZPoints) + zPos + 1) * 4)];
-				Vertex bottomRightRight = _vertices[((((xPos - 1) * _numberOfZPoints) + zPos + 1) * 4) + 2];
-				Vertex bottomMidRight = _vertices[((((xPos - 1) * _numberOfZPoints) + zPos) * 4) + 3];
-				Vertex bottomMidLeft = _vertices[((((xPos - 1) * _numberOfZPoints) + zPos) * 4) + 2];
-				Vertex bottomLeftLeft = _vertices[((((xPos - 1) * _numberOfZPoints) + zPos - 1) * 4) + 3];
-				Vertex midLeftBottom = _vertices[(((xPos * _numberOfZPoints) + zPos - 1) * 4) + 1];
-				Vertex midLeftTop = _vertices[(((xPos * _numberOfZPoints) + zPos - 1) * 4) + 3];
-
-				// get face normal
-				XMVECTOR vector1 = { (currentBottomLeft.Position.x - currentBottomRight.Position.x), (currentBottomLeft.Position.y - currentBottomRight.Position.y), (currentBottomLeft.Position.z - currentBottomRight.Position.z) };
-				XMVECTOR vector2 = { (currentBottomLeft.Position.x - currentTopRight.Position.x), (currentBottomLeft.Position.y - currentTopRight.Position.y), (currentBottomLeft.Position.z - currentTopRight.Position.z) };
+				XMVECTOR vector1 = { (currentSet[0].Position.x - currentSet[1].Position.x), (currentSet[0].Position.y - currentSet[1].Position.y), (currentSet[0].Position.z - currentSet[1].Position.z) };
+				XMVECTOR vector2 = { (currentSet[0].Position.x - currentSet[3].Position.x), (currentSet[0].Position.y - currentSet[3].Position.y), (currentSet[0].Position.z - currentSet[3].Position.z) };
 				XMVECTOR cross = XMVector3Cross(vector1, vector2);
 				cross = XMVector3Normalize(cross);
-				XMFLOAT3 normal;
-				XMStoreFloat3(&normal, cross);
 
-				// Add to vertex normals
-				currentBottomLeft.Normal = { currentBottomLeft.Normal.x + normal.x, currentBottomLeft.Normal.y + normal.y, currentBottomLeft.Normal.z + normal.z };
-				currentBottomRight.Normal = { currentBottomRight.Normal.x + normal.x, currentBottomRight.Normal.y + normal.y, currentBottomRight.Normal.z + normal.z };
-				currentTopLeft.Normal = { currentTopLeft.Normal.x + normal.x, currentTopLeft.Normal.y + normal.y, currentTopLeft.Normal.z + normal.z };
-				currentTopRight.Normal = { currentTopRight.Normal.x + normal.x, currentTopRight.Normal.y + normal.y, currentTopRight.Normal.z + normal.z };
-				topLeftLeft.Normal = { topLeftLeft.Normal.x + normal.x, topLeftLeft.Normal.y + normal.y, topLeftLeft.Normal.z + normal.z };
-				topMidLeft.Normal = { topMidLeft.Normal.x + normal.x, topMidLeft.Normal.y + normal.y, topMidLeft.Normal.z + normal.z };
-				topMidRight.Normal = { topMidRight.Normal.x + normal.x, topMidRight.Normal.y + normal.y, topMidRight.Normal.z + normal.z };
-				topRightRight.Normal = { topRightRight.Normal.x + normal.x, topRightRight.Normal.y + normal.y, topRightRight.Normal.z + normal.z };
-				midRightTop.Normal = { midRightTop.Normal.x + normal.x, midRightTop.Normal.y + normal.y, midRightTop.Normal.z + normal.z };
-				midRightBottom.Normal = { midRightBottom.Normal.x + normal.x, midRightBottom.Normal.y + normal.y, midRightBottom.Normal.z + normal.z };
-				bottomRightRight.Normal = { bottomRightRight.Normal.x + normal.x, bottomRightRight.Normal.y + normal.y, bottomRightRight.Normal.z + normal.z };
-				bottomMidRight.Normal = { bottomMidRight.Normal.x + normal.x, bottomMidRight.Normal.y + normal.y, bottomMidRight.Normal.z + normal.z };
-				bottomMidLeft.Normal = { bottomMidLeft.Normal.x + normal.x, bottomMidLeft.Normal.y + normal.y, bottomMidLeft.Normal.z + normal.z };
-				bottomLeftLeft.Normal = { bottomLeftLeft.Normal.x + normal.x, bottomLeftLeft.Normal.y + normal.y, bottomLeftLeft.Normal.z + normal.z };
-				midLeftBottom.Normal = { midLeftBottom.Normal.x + normal.x, midLeftBottom.Normal.y + normal.y, midLeftBottom.Normal.z + normal.z };
-				midLeftTop.Normal = { midLeftTop.Normal.x + normal.x, midLeftTop.Normal.y + normal.y, midLeftTop.Normal.z + normal.z };
+				for (int i = 0; i < 16; i++)
+				{
+					XMStoreFloat3(&currentSet[i].Normal, XMLoadFloat3(&currentSet[i].Normal) + cross);
+				}
 
-				// reset up the vertices so they gain the new normal
-				_vertices[vertexIndex] = currentBottomLeft;
-				_vertices[vertexIndex + 1] = currentBottomRight;
-				_vertices[vertexIndex + 2] = currentTopLeft;
-				_vertices[vertexIndex + 3] = currentTopRight;
-				_vertices[((((xPos + 1) * _numberOfZPoints) + zPos - 1) * 4) + 1] = topLeftLeft;
-				_vertices[((((xPos + 1) * _numberOfZPoints) + zPos) * 4)] = topMidLeft;
-				_vertices[((((xPos + 1) * _numberOfZPoints) + zPos) * 4) + 1] = topMidRight;
-				_vertices[((((xPos + 1) * _numberOfZPoints) + zPos + 1) * 4)] = topRightRight;
-				_vertices[(((xPos * _numberOfZPoints) + zPos + 1) * 4) + 2] = midRightTop;
-				_vertices[(((xPos * _numberOfZPoints) + zPos + 1) * 4)] = midRightBottom;
-				_vertices[((((xPos - 1) * _numberOfZPoints) + zPos + 1) * 4) + 2] = bottomRightRight;
-				_vertices[((((xPos - 1) * _numberOfZPoints) + zPos) * 4) + 3] = bottomMidRight;
-				_vertices[((((xPos - 1) * _numberOfZPoints) + zPos) * 4) + 2] = bottomMidLeft;
-				_vertices[((((xPos - 1) * _numberOfZPoints) + zPos - 1) * 4) + 3] = bottomLeftLeft;
-				_vertices[(((xPos * _numberOfZPoints) + zPos - 1) * 4) + 1] = midLeftBottom;
-				_vertices[(((xPos * _numberOfZPoints) + zPos - 1) * 4) + 3] = midLeftTop;
+				_vertices[vertexIndex] = currentSet[0];
+				_vertices[vertexIndex + 1] = currentSet[1];
+				_vertices[vertexIndex + 2] = currentSet[2];
+				_vertices[vertexIndex + 3] = currentSet[3];
+				_vertices[((((xPos + 1) * _numberOfZPoints) + zPos - 1) * 4) + 1] = currentSet[4];
+				_vertices[((((xPos + 1) * _numberOfZPoints) + zPos) * 4)] = currentSet[5];
+				_vertices[((((xPos + 1) * _numberOfZPoints) + zPos) * 4) + 1] = currentSet[6];
+				_vertices[((((xPos + 1) * _numberOfZPoints) + zPos + 1) * 4)] = currentSet[7];
+				_vertices[(((xPos * _numberOfZPoints) + zPos + 1) * 4) + 2] = currentSet[8];
+				_vertices[(((xPos * _numberOfZPoints) + zPos + 1) * 4)] = currentSet[9];
+				_vertices[((((xPos - 1) * _numberOfZPoints) + zPos + 1) * 4) + 2] = currentSet[10];
+				_vertices[((((xPos - 1) * _numberOfZPoints) + zPos) * 4) + 3] = currentSet[11];
+				_vertices[((((xPos - 1) * _numberOfZPoints) + zPos) * 4) + 2] = currentSet[12];
+				_vertices[((((xPos - 1) * _numberOfZPoints) + zPos - 1) * 4) + 3] = currentSet[13];
+				_vertices[(((xPos * _numberOfZPoints) + zPos - 1) * 4) + 1] = currentSet[14];
+				_vertices[(((xPos * _numberOfZPoints) + zPos - 1) * 4) + 3] = currentSet[15];
 			}
 		}
 	}
 
-	for (int i = 0; i < _vertices.size(); i++)
-	{
-		XMStoreFloat3(&_vertices[i].Normal, XMVector3Normalize(XMLoadFloat3(&_vertices[i].Normal)));
-	}
+	//for (int i = 0; i < _vertices.size(); i++)
+	//{
+	//	XMStoreFloat3(&_vertices[i].Normal, XMVector3Normalize(XMLoadFloat3(&_vertices[i].Normal)));
+	//}
 }
 
 float TerrainNode::GetHeightAtPoint(float x, float z)
