@@ -8,6 +8,7 @@
 #include "MeshNode.h"
 #include "TerrainNode.h"
 #include "SkyNode.h"
+#include "MoveableNode.h"
 
 #endif
 

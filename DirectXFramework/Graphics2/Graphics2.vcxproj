@@ -160,6 +160,7 @@ copy /Y "$(ProjectDir)white.png" "$(SolutionDir)$(Platform)\$(Configuration)"</C
     <ClInclude Include="Mesh.h" />
     <ClInclude Include="MeshNode.h" />
     <ClInclude Include="MeshRenderer.h" />
+    <ClInclude Include="MoveableNode.h" />
     <ClInclude Include="Renderer.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="ResourceManager.h" />
@@ -189,6 +190,7 @@ copy /Y "$(ProjectDir)white.png" "$(SolutionDir)$(Platform)\$(Configuration)"</C
     <ClCompile Include="Mesh.cpp" />
     <ClCompile Include="MeshNode.cpp" />
     <ClCompile Include="MeshRenderer.cpp" />
+    <ClCompile Include="MoveableNode.cpp" />
     <ClCompile Include="ResourceManager.cpp" />
     <ClCompile Include="SceneGraph.cpp" />
     <ClCompile Include="SkyNode.cpp">

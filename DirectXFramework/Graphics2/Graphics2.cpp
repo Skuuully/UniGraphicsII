@@ -25,6 +25,8 @@ void Graphics2::CreateSceneGraph()
 	_terrain = make_shared<TerrainNode>(L"terrain", L"Example_HeightMap.RAW");
 	sceneGraph->Add(_terrain);
 	cube->SetWorldTransform(XMMatrixScaling(50.0f, 50.0f, 50.0f) * XMMatrixTranslation(0.0f, 600.0f, 0.0f));
+	//shared_ptr<MoveableNode> planeTwo = make_shared<MoveableNode>(L"Plane2", L"Plane\\Bonanza.3DS");
+	//sceneGraph->Add(planeTwo);
 
 }
 

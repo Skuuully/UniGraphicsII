@@ -640,4 +640,5 @@ float TerrainNode::GetHeightAtPoint(float x, float z)
 			return position;
 		}
 	}
+	return -1.0f;
 }
