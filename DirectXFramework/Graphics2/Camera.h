@@ -1,12 +1,9 @@
 #pragma once
-
-#ifndef CAMERA
-#define CAMERA
-
 #include "core.h"
 #include "DirectXCore.h"
 
-#endif
+class MoveableNode;
+
 class Camera
 {
 public:
@@ -17,29 +14,15 @@ public:
 	XMMATRIX GetViewMatrix();
 	XMVECTOR GetCameraPosition();
 	void SetCameraPosition(float x, float y, float z);
-	void SetPitch(float pitch);
-	void SetTotalPitch(float pitch);
-	float GetPitch() const;
-	void SetYaw(float yaw);
-	void SetTotalYaw(float yaw);
-	float GetYaw() const;
-	void SetRoll(float roll);
-	void SetTotalRoll(float roll);
-	float GetRoll() const;
-	void SetLeftRight(float leftRight);
-	void SetForwardBack(float forwardBack);
+	void SetNodeToFollow(shared_ptr<MoveableNode> nodeToFollow, XMFLOAT3 offset);
 
 private:
 	XMFLOAT4    _cameraPosition;
 
 	XMFLOAT4X4  _viewMatrix;
 
-	float       _moveLeftRight;
-	float       _moveForwardBack;
 
-	float       _cameraYaw;
-	float       _cameraPitch;
-	float       _cameraRoll;
-
+	XMFLOAT3 _offset;
+	shared_ptr<MoveableNode> _nodeToFollow;
 };
 

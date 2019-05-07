@@ -6,7 +6,6 @@
 class MeshNode : public SceneNode
 {
 public:
-public:
 	MeshNode(wstring name, wstring modelName) : SceneNode(name) { _modelName = modelName; }
 
 	bool Initialise();

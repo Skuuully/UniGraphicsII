@@ -18,14 +18,14 @@ public:
 	void CreateSceneGraph();
 	void UpdateSceneGraph();
 
-	void MoveCamera();
 	void CameraHover(XMFLOAT3 offset);
-	float DegreesToRadians(float degrees);
+	void MovePlayer();
 
 private:
-	float _rotationAngle;
-	int _cameraSensitivity;
+	//global stuffs
 	shared_ptr<TerrainNode> _terrain;
+	shared_ptr<MoveableNode> _player;
+
 	// the offset for how far behind the camera should follow
 	XMFLOAT3 _offset;
 

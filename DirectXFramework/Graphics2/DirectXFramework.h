@@ -60,4 +60,3 @@ private:
 
 	bool GetDeviceAndSwapChain();
 };
-

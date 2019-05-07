@@ -39,13 +39,22 @@ struct PixelShaderInput
 	float4 NormalWS : TEXCOORD3;
 	float2 TexCoord : TEXCOORD0;
 	float2 BlendMapTexCoord : TEXCOORD1;
+	float1 YPosition : YPOSITION;
 };
 
 PixelShaderInput VShader(VertexShaderInput vin)
 {
 	PixelShaderInput output;
 	float3 position = vin.Position;
-	output.Position = mul(completeTransformation, float4(position, 1.0f));
+	output.YPosition = position.y;
+	if (position.y < 150.0f)
+	{
+		output.Position = mul(completeTransformation, float4(position.x, 150.0f, position.z, 1.0f));
+	}
+	else
+	{
+		output.Position = mul(completeTransformation, float4(position, 1.0f));
+	}
 	output.PositionWS = mul(worldTransformation, float4(position, 1.0f));
 	output.NormalWS = float4(mul((float3x3)worldTransformation, vin.Normal), 1.0f);
 	output.TexCoord = vin.TexCoord;
@@ -92,8 +101,21 @@ float4 PShader(PixelShaderInput input) : SV_TARGET
 	color = lerp(color, c3, t.b);
 	color = lerp(color, c4, t.a);
 
-	// Combine all components
-	color = (ambientLight + diffuse) * color;
-	color = saturate(color + specular);
+	float4 seaBlue = { 0.0f, 0.41f, 0.58f, 1.0f };
+	float4 lightSeaGreen = { 0.13f, 0.70f, 0.67f, 1.0f };
+
+	if (input.YPosition < 150.0f)
+	{
+		color = (ambientLight + diffuse) * seaBlue;
+		color = saturate(color + specular);
+	}
+	else
+	{
+		// Combine all components
+		color = (ambientLight + diffuse) * color;
+		color = saturate(color + specular);
+	}
+
+
 	return color;
 }

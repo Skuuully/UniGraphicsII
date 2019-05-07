@@ -39,7 +39,7 @@ void TerrainNode::Render()
 
 	// Draw the thing
 	cbuffer cbuffer;
-	cbuffer.opacity = 0.9f;
+	cbuffer.opacity = 1.0f;
 	cbuffer.shininess = 0.8f;
 	XMStoreFloat4x4(&cbuffer.completeTransformation, completeTransformation);
 	cbuffer.worldTransformation = _combinedWorldTransformation;
@@ -58,8 +58,6 @@ void TerrainNode::Render()
 	_deviceContext->PSSetShaderResources(0, 1, _blendMapResourceView.GetAddressOf());
 	_deviceContext->PSSetShaderResources(1, 1, _texturesResourceView.GetAddressOf());
 
-	// Set the texture to be used by the pixel shader
-	//_deviceContext->PSSetShaderResources(0, 1, _texture.GetAddressOf());
 
 	// Now render the thing
 	UINT stride = sizeof(Vertex);

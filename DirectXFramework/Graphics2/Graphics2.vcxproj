@@ -148,6 +148,7 @@ copy /Y "$(ProjectDir)white.png" "$(SolutionDir)$(Platform)\$(Configuration)"</C
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="BoundingVolume.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Core.h" />
     <ClInclude Include="Cube.h" />
@@ -181,6 +182,7 @@ copy /Y "$(ProjectDir)white.png" "$(SolutionDir)$(Platform)\$(Configuration)"</C
     <Image Include="small.ico" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="BoundingVolume.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Cube.cpp" />
     <ClCompile Include="DDSTextureLoader.cpp" />

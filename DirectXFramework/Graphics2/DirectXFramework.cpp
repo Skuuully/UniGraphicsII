@@ -6,7 +6,7 @@
 
 DirectXFramework * _dxFramework = nullptr;
 
-DirectXFramework::DirectXFramework() : DirectXFramework(800, 600)
+DirectXFramework::DirectXFramework() : DirectXFramework(1800, 1000)
 {
 }
 

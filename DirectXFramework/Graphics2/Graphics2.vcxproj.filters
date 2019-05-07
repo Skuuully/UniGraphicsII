@@ -84,6 +84,9 @@
     <ClInclude Include="MoveableNode.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="BoundingVolume.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Graphics2.rc">
@@ -142,6 +145,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="MoveableNode.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="BoundingVolume.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
